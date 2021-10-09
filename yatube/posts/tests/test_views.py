@@ -226,7 +226,9 @@ class PostCreateTest(TestCase):
                                                          ).content
         self.assertEqual(index_content, index_content_cache)
         cache.clear()
-        index_content_cache_clear = self.authorized_client.get(reverse('posts:index')).content
+        index_content_cache_clear = self.authorized_client.get(
+                                    reverse('posts:index')
+                                                               ).content
         self.assertNotEqual(index_content, index_content_cache_clear)
 
 
