@@ -39,8 +39,8 @@ def profile(request, username):
     following = None
     if request.user.is_authenticated:
         following = Follow.objects.filter(
-                    user=request.user,
-                    author=author
+                          user=request.user,
+                          author=author
                                          ).exists()
     context = {'author': author,
                "username": username,

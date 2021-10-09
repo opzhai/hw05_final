@@ -214,21 +214,24 @@ class PostCreateTest(TestCase):
                 self.assertNotIn(checked_post, posts)
 
     def test_index_page_cash(self):
-        index_content = self.authorized_client.get(
-                            reverse('posts:index')
-                                                  ).content
+        index_content = self.authorized_client\
+                        .get(reverse('posts:index'
+                                    )
+                            ).content
         Post.objects.create(
             text='Тестовый текст',
             author=self.user,
         )
-        index_content_cache = self.authorized_client.get(
-                                  reverse('posts:index')
-                                                        ).content
+        index_content_cache = self.authorized_client\
+                              .get(reverse('posts:index'
+                                          )
+                                  ).content
         self.assertEqual(index_content, index_content_cache)
         cache.clear()
-        index_content_cache_clear = self.authorized_client.get(
-                                    reverse('posts:index')
-                                                               ).content
+        index_content_cache_clear = self.authorized_client\
+                                    .get(reverse('posts:index'
+                                                )
+                                        ).content
         self.assertNotEqual(index_content, index_content_cache_clear)
 
 
