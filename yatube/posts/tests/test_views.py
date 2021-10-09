@@ -201,7 +201,6 @@ class PostCreateTest(TestCase):
                 self.assertEqual(post.author, checked_post.author)
                 self.assertEqual(post.group, checked_post.group)
 
-
     def test_post_not_in_wrong_group(self):
         # Проверка: посты не попали в другую группу.
         response_group_2 = self.guest_client.get(reverse('posts:group_posts',
@@ -214,14 +213,17 @@ class PostCreateTest(TestCase):
                 checked_post = Post.objects.get(id=post.id)
                 self.assertNotIn(checked_post, posts)
 
-
-    def test_index_page_cash(self):  
-        index_content = self.authorized_client.get(reverse('posts:index')).content
+    def test_index_page_cash(self):
+        index_content = self.authorized_client.get(
+                        reverse('posts:index')
+                                                   ).content
         Post.objects.create(
             text='Тестовый текст',
             author=self.user,
         )
-        index_content_cache = self.authorized_client.get(reverse('posts:index')).content
+        index_content_cache = self.authorized_client.get(
+                              reverse('posts:index')
+                                                         ).content
         self.assertEqual(index_content, index_content_cache)
         cache.clear()
         index_content_cache_clear = self.authorized_client.get(reverse('posts:index')).content
@@ -245,11 +247,9 @@ class FollowTest(TestCase):
             user=cls.user2,
         )
 
-
     def setUp(self):
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user2)
-
 
     def test_follow_index_context(self):
         # Проверка: контекст view-функции index работает правильно"""

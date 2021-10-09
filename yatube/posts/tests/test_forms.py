@@ -91,8 +91,8 @@ class PostFormTests(TestCase):
 
     def test_create_post_img(self):
         """Валидная форма создает запись с картинкой в Post."""
-        post_count = Post.objects.count()  
-        small_gif = (            
+        post_count = Post.objects.count()
+        small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
             b'\x01\x00\x80\x00\x00\x00\x00\x00'
             b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
@@ -137,7 +137,7 @@ class PostFormTests(TestCase):
             follow=True
         )
         self.assertRedirects(response, reverse('posts:post_detail',
-                                     kwargs={'post_id': self.post.id}
+                             kwargs={'post_id': self.post.id}
                                                )
                              )
         self.assertEqual(Comment.objects.count(), comments_count + 1)

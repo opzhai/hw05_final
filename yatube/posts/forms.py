@@ -1,4 +1,4 @@
-from django.forms import ModelForm, ValidationError
+from django.forms import ValidationError
 from .models import Post, Comment
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -7,8 +7,7 @@ from django import forms
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['text', 'group', 'image' ]
-
+        fields = ['text', 'group', 'image']
 
 
 def clean_text(self):
@@ -21,7 +20,7 @@ def clean_text(self):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['text',]
+        fields = ['text', ]
         labels = {'text': _('Текст'),
                   }
         help_texts = {'text': _('Ваш комментарий'),

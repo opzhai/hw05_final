@@ -24,7 +24,7 @@ class Post(models.Model):
         auto_now_add=True,
     )
     author = models.ForeignKey(
-        User, 
+        User,
         on_delete=models.CASCADE,
         related_name="posts"
     )
@@ -37,15 +37,15 @@ class Post(models.Model):
         verbose_name='Группа',
         help_text='Выберите группу'
     )
-    # Поле для картинки (необязательное) 
+    # Поле для картинки (необязательное)
     image = models.ImageField(
         'Картинка',
         upload_to='posts/',
         null=True,
         blank=True,
-    )  
-    # Аргумент upload_to указывает директорию, 
-    # в которую будут загружаться пользовательские файлы. 
+    )
+    # Аргумент upload_to указывает директорию,
+    # в которую будут загружаться пользовательские файлы.
 
     class Meta:
         ordering = ('-pub_date',)
@@ -53,7 +53,7 @@ class Post(models.Model):
         verbose_name_plural = 'Посты'
 
     def __str__(self):
-        return self.text[:15] 
+        return self.text[:15]
 
 
 class Comment(models.Model):
@@ -61,20 +61,19 @@ class Comment(models.Model):
         'Ваш комментарий',
     )
     post = models.ForeignKey(
-        Post, 
-        on_delete=models.CASCADE, 
+        Post,
+        on_delete=models.CASCADE,
         related_name='comments')
     author = models.ForeignKey(
-        User, 
+        User,
         on_delete=models.CASCADE,
         related_name="comments"
     )
-    
+
     created = models.DateTimeField(
         'Дата комментария',
         auto_now_add=True
     )
-
 
     class Meta:
         ordering = ('-created',)
