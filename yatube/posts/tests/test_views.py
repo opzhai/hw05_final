@@ -215,15 +215,15 @@ class PostCreateTest(TestCase):
 
     def test_index_page_cash(self):
         index_content = self.authorized_client.get(
-                        reverse('posts:index')
-                                                   ).content
+                            reverse('posts:index')
+                                                  ).content
         Post.objects.create(
             text='Тестовый текст',
             author=self.user,
         )
         index_content_cache = self.authorized_client.get(
-                              reverse('posts:index')
-                                                         ).content
+                                  reverse('posts:index')
+                                                        ).content
         self.assertEqual(index_content, index_content_cache)
         cache.clear()
         index_content_cache_clear = self.authorized_client.get(
