@@ -1,0 +1,39 @@
+<!-- templates/about/author.html -->
+{% extends "base.html" %}
+<h1>{% block header %}Об инструментах{% endblock %}</h1>
+{% block content %}
+  <div class="row">
+    <!-- Левый вспомогательный блок -->
+    <div class="col-md-3 mb-3 mt-1">
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="h3">
+                Об авторе
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="h6 text-muted">
+                Позжаев Александр
+
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Тело страницы -->
+    <div class="col-md-9">
+      <div class="card-body">
+        <div class="card-text">
+          <p>На этой странице можно рассказать, какие программные инструменты 
+                вы применили для создания этого сайта, какие навыки вам помогли, 
+                с чем вы хорошо разобрались, а с чем — не очень. Картинки и 
+                нестандартные подходы приветствуются: эта страница может получиться 
+                очень интересной.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

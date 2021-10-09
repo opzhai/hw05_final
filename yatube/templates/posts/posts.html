@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<main role="main" class="container">
+{% include 'includes/author_details.html' %}
+{% load thumbnail %}
+    <div class="col-md-9">
+    <!-- Пост -->
+      <div class="card mb-3 mt-1 shadow-sm">
+        <div class="card-body">
+          <p class="card-text">
+            <article>
+              <ul>
+                <li>
+                  Автор: {{ post.author.get_full_name }} 
+                  <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
+                </li>
+                <li>
+                  Дата публикации: {{ post.pub_date|date:"d E Y" }}
+                </li>
+              </ul>
+              {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+                <img class="card-img my-2" src="{{ im.url }}">
+              {% endthumbnail %}
+              <p>{{ post.text }}</p>
+              <a href="{% url 'posts:post_detail' post.pk %}">подробная информация</a>
+            </article>
+          </p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <!-- Ссылка на редактирование, показывается только автору записи.
+              Эту ссылку вы подключите в финальном задании спринта -->
+              <a class="btn btn-sm text-muted" href="posts/{{ post_id }}/edit" role="button">
+                Редактировать
+              </a>
+            </div>
+            <!-- Дата публикации  -->
+            <small class="text-muted">{{post.pub_date|date:"j E Y"}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% include 'includes/comments.html' %}
+</main>
+{% endblock %}
