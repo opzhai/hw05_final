@@ -38,11 +38,10 @@ def profile(request, username):
     full_name = author.get_full_name()
     following = None
     if request.user.is_authenticated:
-        following = Follow.objects\
-                    .filter(
-                    user=request.user,
-                    author=author
-                           ).exists()
+        following = Follow.objects.filter(
+                        user=request.user,
+                        author=author
+                        ).exists()
     context = {'author': author,
                "username": username,
                "full_name": full_name,
