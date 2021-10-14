@@ -53,11 +53,13 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
+    author = post.author
     all_posts = Post.objects.filter(author=post.author)
     post_count = all_posts.count()
     comments = post.comments.all()
     form = CommentForm()
     context = {
+        'author': author,
         'post': post,
         'post_count': post_count,
         'comments': comments,
@@ -94,7 +96,9 @@ def post_create(request):
 def post_edit(request, post_id):
     post_to_edit = get_object_or_404(Post, pk=post_id)
     if request.user == post_to_edit.author:
-        form = PostForm(request.POST or None, instance=post_to_edit)
+        form = PostForm(request.POST or None, 
+                        files=request.FILES or None,
+                        instance=post_to_edit)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user

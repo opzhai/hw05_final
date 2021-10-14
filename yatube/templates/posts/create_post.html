@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  {% if editing %}
+  {% if is_edit %}
     Редактирование записи
   {% else %}
     Создание новой записи
@@ -16,7 +16,7 @@
       <div class="card">
         <div class="card-header">
           {% block page_title %}
-            {% if editing %}
+            {% if is_edit %}
               Редактирование записи
             {% else %}
               Создание новой записи
@@ -63,7 +63,7 @@
             <div class="col-md-6 offset-md-4">
               <button type="submit" class="btn btn-primary">
                 {% block button %}
-                  {% if editing %}
+                  {% if is_edit %}
                     Сохранить запись
                   {% else %}
                     Добавить запись

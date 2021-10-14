@@ -36,8 +36,6 @@ class PostsURLTests(TestCase):
 
     def test_url_exists_at_desired_location_guest(self):
         """Страницы доступны любому пользователю."""
-        response = self.guest_client.get('/')
-        self.assertEqual(response.status_code, 200)
         url_status_codes = {
             '/': HTTPStatus.OK,
             '/about/author/': HTTPStatus.OK,
@@ -55,12 +53,12 @@ class PostsURLTests(TestCase):
     def test_post_create_url_exists_at_desired_location_authorized(self):
         """Страница /create/ доступна авторизованному пользователю."""
         response = self.authorized_client.get('/create/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_edit_url_exists_at_desired_location_authorized(self):
         """Страница /posts/pk/edit/ доступна автору."""
         response = self.authorized_client.get('/posts/1/edit/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""
