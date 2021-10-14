@@ -44,7 +44,6 @@ class PostFormTests(TestCase):
         super().tearDownClass()
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
-
     def test_posts_create(self):
         posts_count = Post.objects.count()
         form_data = {
@@ -76,7 +75,6 @@ class PostFormTests(TestCase):
         target_url = f'{login_url}?next={new_post_url}'
         self.assertRedirects(new_post_create, target_url)
 
-
     def test_not_author_cant_edit(self):
         user2 = User.objects.create_user(username='test-username2')
         authorized_client2 = Client()
@@ -97,7 +95,6 @@ class PostFormTests(TestCase):
                              reverse('posts:post_detail',
                                      kwargs={'post_id': post_id})
                              )
-                             
 
     def test_post_edit(self):
         post_id = PostFormTests.post.pk

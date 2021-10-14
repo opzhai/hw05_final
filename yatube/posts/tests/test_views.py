@@ -56,15 +56,14 @@ class PostPagesTests(TestCase):
             reverse('posts:group_posts',
                     kwargs={'slug': 'test_slug'}
                     ): 'posts/group_list.html',
-            reverse('posts:profile',
-                                          kwargs={'username': 'test-username'}
-                                          ): 'posts/profile.html',
+            reverse('posts:profile', kwargs={'username': 'test-username'}
+                                     ): 'posts/profile.html',
             reverse('posts:post_create'): 'posts/create_post.html',
-            reverse('posts:post_detail',
-                                        kwargs={'post_id': '1'}
-                                        ): 'posts/posts.html',
+            reverse('posts:post_detail', kwargs={'post_id': '1'}
+                                         ): 'posts/posts.html',
             reverse('posts:follow_index'): 'posts/follow.html',
-            reverse('posts:post_edit', kwargs={'post_id': '3'}): 'posts/create_post.html',
+            reverse('posts:post_edit', kwargs={'post_id': '3'}
+                                       ): 'posts/create_post.html',
         }
 
         # Проверяем, что при обращении к name
@@ -127,7 +126,7 @@ class PostPagesTests(TestCase):
                 # указанного класса
                 self.assertIsInstance(form_field, expected)
 
-    
+
 class PaginatorViewsTest(TestCase):
     # Здесь создаются фикстуры: клиент и 13 тестовых записей.
     @classmethod
@@ -159,10 +158,10 @@ class PaginatorViewsTest(TestCase):
     def test_first_page_contains_ten_records(self):
         response = self.client.get(reverse('posts:index'))
         posts = response.context['page_obj']
-        count=0
+        count = 0
         for post in posts:
             with self.subTest(post=post):
-                count+=1
+                count += 1
         self.assertEqual(count, 10)
 
         # Проверка: количество постов на первой странице равно 10.
@@ -230,7 +229,8 @@ class PostCreateTest(TestCase):
 
     def test_profile_context(self):
         # Проверка: контекст view-функции profile работает правильно"""
-        response_index = self.client.get(reverse('posts:profile', kwargs={'username': 'test-username'}))
+        response_index = self.client.get(
+            reverse('posts:profile', kwargs={'username': 'test-username'}))
         posts = response_index.context['page_obj']
         for post in posts:
             with self.subTest(post=post):
@@ -248,7 +248,8 @@ class PostCreateTest(TestCase):
         }
         for value, expected in form_fields.items():
             with self.subTest(value=value):
-                form_field = response_index.context.get('form').fields.get(value)
+                form_field = response_index.context.get(
+                    'form').fields.get(value)
                 # Проверяет, что поле формы является экземпляром
                 # указанного класса
                 self.assertIsInstance(form_field, expected)
@@ -318,15 +319,15 @@ class FollowTest(TestCase):
             'posts:profile_follow',
             kwargs={'username': 'just_user'}))
         follow_count = Follow.objects.filter(user=self.user2,
-                                          author=self.user3).count()
+                                             author=self.user3).count()
         self.assertEqual(follow_count, 1)
 
     def test_user_can_unfollow(self):
         self.authorized_client.get(reverse(
             'posts:profile_unfollow',
             kwargs={'username': 'just_user'}))
-        follow_count = Follow.objects.filter(user=self.user2,
-                                          author=self.user3).count()
+        follow_count = Follow.objects.filter(user=self.user2, 
+                                             author=self.user3).count()
         self.assertEqual(follow_count, 0)
 
     def test_new_post_in_index_follow(self):
@@ -338,7 +339,6 @@ class FollowTest(TestCase):
         response = self.authorized_client.get(reverse('posts:follow_index'))
         self.assertEqual(len(response.context['page_obj']), posts_count + 1)
 
-    
     def test_new_post_not_in_index_follow(self):
         posts_count = Post.objects.filter(author=self.user3).count()
         Post.objects.create(
