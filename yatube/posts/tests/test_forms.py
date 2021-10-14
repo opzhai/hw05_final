@@ -170,6 +170,6 @@ class PostFormTests(TestCase):
 
     def test_guest_cant_comment(self):
         self.guest_client.post(
-            reverse('posts:add_comment',
-                    kwargs={'post_id': self.post.id}), {"text": "test_comment"})
+            reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
+            {"text": "test_comment"})
         self.assertFalse(Comment.objects.filter(text="test_comment").exists())

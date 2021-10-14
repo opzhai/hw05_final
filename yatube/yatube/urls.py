@@ -11,7 +11,6 @@ urlpatterns = [
     path('create/', views.post_create, name='post_create'),
     path("admin/", admin.site.urls),
     path('about/', include('about.urls', namespace='about')),
-    
 ]
 
 handler404 = 'core.views.page_not_found'
