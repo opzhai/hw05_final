@@ -117,8 +117,6 @@ class PostFormTests(TestCase):
         self.assertEqual(edited_post.author, self.post.author)
         self.assertEqual(edited_post.text, form_data['text'])
 
-
-
     def test_create_post_img(self):
         """Валидная форма создает запись с картинкой в Post."""
         post_count = Post.objects.count()
@@ -173,5 +171,5 @@ class PostFormTests(TestCase):
     def test_guest_cant_comment(self):
         self.guest_client.post(
             reverse('posts:add_comment',
-            kwargs={'post_id': self.post.id}), {"text": "test_comment"})
+                    kwargs={'post_id': self.post.id}), {"text": "test_comment"})
         self.assertFalse(Comment.objects.filter(text="test_comment").exists())

@@ -57,13 +57,13 @@ class PostPagesTests(TestCase):
                     kwargs={'slug': 'test_slug'}
                     ): 'posts/group_list.html',
             reverse('posts:profile', kwargs={'username': 'test-username'}
-                                     ): 'posts/profile.html',
+                    ): 'posts/profile.html',
             reverse('posts:post_create'): 'posts/create_post.html',
             reverse('posts:post_detail', kwargs={'post_id': '1'}
-                                         ): 'posts/posts.html',
+                    ): 'posts/posts.html',
             reverse('posts:follow_index'): 'posts/follow.html',
             reverse('posts:post_edit', kwargs={'post_id': '3'}
-                                       ): 'posts/create_post.html',
+                    ): 'posts/create_post.html',
         }
 
         # Проверяем, что при обращении к name
@@ -92,7 +92,6 @@ class PostPagesTests(TestCase):
                 # указанного класса
                 self.assertIsInstance(form_field, expected)
 
-    
     def test_group_page_show_correct_context(self):
         """Шаблон group_list сформирован с правильным контекстом"""
         response_group = self.authorized_client.get(
@@ -326,7 +325,7 @@ class FollowTest(TestCase):
         self.authorized_client.get(reverse(
             'posts:profile_unfollow',
             kwargs={'username': 'just_user'}))
-        follow_count = Follow.objects.filter(user=self.user2, 
+        follow_count = Follow.objects.filter(user=self.user2,
                                              author=self.user3).count()
         self.assertEqual(follow_count, 0)
 
@@ -372,8 +371,8 @@ class ImageTests(TestCase):
         cls.uploaded = SimpleUploadedFile(
             name='small.gif',
             content=cls.small_gif,
-            content_type='image/gif')
-        
+            content_type='image/gif',
+        )
         cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='test_slug',
@@ -383,14 +382,14 @@ class ImageTests(TestCase):
             author=cls.user,
             text='Тестовый текст',
             group=cls.group,
-            image= cls.uploaded,
+            image=cls.uploaded,
         )
 
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
-    
+
     def test_image_profile_context(self):
         response_profile = self.client.get(reverse(
             'posts:profile', kwargs={'username': 'test-username'}))
