@@ -8,7 +8,6 @@ from posts.models import Post, Group, Follow
 from django import forms
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.paginator import Paginator
 User = get_user_model()
 
 
@@ -212,7 +211,8 @@ class PostCreateTest(TestCase):
         self.authorized_client.force_login(self.user)
 
     def test_index_context(self):
-        # Проверка: контекст view-функции index работает правильно, пост попал на главную страницу сайта"""
+        # Проверка: контекст view-функции index работает правильно,
+        # пост попал на главную страницу сайта"""
         response_index = self.client.get(reverse('posts:index'))
         posts = response_index.context['page_obj']
         for post in posts:
@@ -257,10 +257,8 @@ class PostCreateTest(TestCase):
             text='Тестовый пост',
             group=self.group,
         )
-        response_group = self.guest_client.get(reverse('posts:group_posts',
-                                                 kwargs={'slug': 'test_slug'}
-                                                         )
-                                                 )
+        response_group = self.guest_client.get(
+            reverse('posts:group_posts', kwargs={'slug': 'test_slug'}))
         posts = response_group.context['page_obj']
         for post in posts:
             with self.subTest(post=post):

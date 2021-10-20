@@ -58,7 +58,8 @@ class PostsURLTests(TestCase):
 
     def test_post_edit_url_exists_at_desired_location_authorized(self):
         """Страница /posts/pk/edit/ доступна автору."""
-        response = self.authorized_client.get(f'/posts/{PostsURLTests.post.id}/edit/')
+        response = self.authorized_client.get(
+            f'/posts/{PostsURLTests.post.id}/edit/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_post_edit_url_not_author(self):
@@ -76,8 +77,10 @@ class PostsURLTests(TestCase):
 
     def test_post_edit_url_guest(self):
         """Страница /posts/pk/edit/ не доступна неавторизованному пользователю."""
-        response = self.guest_client.get(f'/posts/{PostsURLTests.post.id}/edit/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        response = self.guest_client.get(
+            f'/posts/{PostsURLTests.post.id}/edit/')
+        self.assertEqual(
+            response.status_code, HTTPStatus.FOUND)
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""

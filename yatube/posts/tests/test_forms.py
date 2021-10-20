@@ -178,6 +178,6 @@ class PostFormTests(TestCase):
             {"text": "test_comment"})
         self.authorized_client.post(
             reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
-            {"text": "test_comment123"})
+            {"text": "test_comment12"})
         self.assertFalse(Comment.objects.filter(text="test_comment").exists())
-        self.assertTrue(Comment.objects.filter(text="test_comment123").exists())
+        self.assertTrue(Comment.objects.filter(text="test_comment12").exists())
