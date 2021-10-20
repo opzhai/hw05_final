@@ -76,7 +76,8 @@ class PostsURLTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_post_edit_url_guest(self):
-        """Страница /posts/pk/edit/ не доступна неавторизованному пользователю."""
+        """Страница /posts/pk/edit/ не доступна"""
+        """неавторизованному пользователю."""
         response = self.guest_client.get(
             f'/posts/{PostsURLTests.post.id}/edit/')
         self.assertEqual(
