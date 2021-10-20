@@ -45,6 +45,7 @@ class PostFormTests(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_posts_create(self):
+        Post.objects.all().delete()
         posts_count = Post.objects.count()
         form_data = {
             'text': 'Тестовый текст 2',
@@ -55,7 +56,7 @@ class PostFormTests(TestCase):
             data=form_data,
             follow=True
         )
-
+        new_post = response.context['page_obj'][0]
         self.assertRedirects(response, reverse('posts:profile',
                                                kwargs={'username':
                                                        'test-username',
@@ -63,6 +64,9 @@ class PostFormTests(TestCase):
                                                )
                              )
         self.assertEqual(Post.objects.count(), posts_count + 1)
+        self.assertEqual(new_post.author, self.post.author)
+        self.assertEqual(new_post.text, form_data['text'])
+        self.assertEqual(new_post.group.pk, form_data['group'])
 
     def test_guest_cant_create(self):
         new_post_create = self.guest_client.post(
@@ -168,8 +172,12 @@ class PostFormTests(TestCase):
                              kwargs={'post_id': self.post.id}))
         self.assertEqual(Comment.objects.count(), comments_count + 1)
 
-    def test_guest_cant_comment(self):
+    def test_author_can_comment(self):
         self.guest_client.post(
             reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
             {"text": "test_comment"})
+        self.authorized_client.post(
+            reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
+            {"text": "test_comment123"})
         self.assertFalse(Comment.objects.filter(text="test_comment").exists())
+        self.assertTrue(Comment.objects.filter(text="test_comment123").exists())

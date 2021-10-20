@@ -13,7 +13,13 @@
                 <li>
                   Автор: {{ post.author.get_full_name }} 
                   <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
+                </li>   
+                {% if post.group is not null %}
+                <li>
+                  Группа: {{ post.group.title }} 
+                  <a href="{% url 'posts:group_posts' post.group.slug %}">все посты группы</a>
                 </li>
+                {% endif %}
                 <li>
                   Дата публикации: {{ post.pub_date|date:"d E Y" }}
                 </li>
