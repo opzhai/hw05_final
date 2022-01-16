@@ -15,8 +15,6 @@ class PostsURLTests(TestCase):
         super().setUpClass()
         cache.clear()
         cls.user = User.objects.create_user(username='test-username')
-        cls.user2 = User.objects.create_user(username='test-username2')
-        cls.user3 = User.objects.create_user(username='test-username3')
         cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='test_slug',
@@ -29,14 +27,17 @@ class PostsURLTests(TestCase):
         )
 
     def setUp(self):
+        # Создаем неавторизованный клиент
         self.guest_client = Client()
+        # Создаем второй клиент
         self.authorized_client = Client()
+        # Авторизуем пользователя
         self.authorized_client.force_login(self.user)
-        self.authorized_client2 = Client()
-        self.authorized_client2.force_login(self.user)
 
     def test_url_exists_at_desired_location_guest(self):
         """Страницы доступны любому пользователю."""
+        response = self.guest_client.get('/')
+        self.assertEqual(response.status_code, 200)
         url_status_codes = {
             '/': HTTPStatus.OK,
             '/about/author/': HTTPStatus.OK,
@@ -54,34 +55,12 @@ class PostsURLTests(TestCase):
     def test_post_create_url_exists_at_desired_location_authorized(self):
         """Страница /create/ доступна авторизованному пользователю."""
         response = self.authorized_client.get('/create/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, 200)
 
     def test_post_edit_url_exists_at_desired_location_authorized(self):
         """Страница /posts/pk/edit/ доступна автору."""
-        response = self.authorized_client.get(
-            f'/posts/{PostsURLTests.post.id}/edit/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_post_edit_url_not_author(self):
-        """Страница /posts/pk/edit/ не доступна неавтору."""
-        post_to_edit = Post.objects.create(
-            author=self.user,
-            text='Тестовая группа',
-            pk=909
-        )
-        new_user = User.objects.create_user(username='test-username1234567')
-        new_authorized_client = Client()
-        new_authorized_client.force_login(new_user)
-        response = new_authorized_client.get(f'/posts/{post_to_edit.id}/edit/')
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
-
-    def test_post_edit_url_guest(self):
-        """Страница /posts/pk/edit/ не доступна"""
-        """неавторизованному пользователю."""
-        response = self.guest_client.get(
-            f'/posts/{PostsURLTests.post.id}/edit/')
-        self.assertEqual(
-            response.status_code, HTTPStatus.FOUND)
+        response = self.authorized_client.get('/posts/1/edit/')
+        self.assertEqual(response.status_code, 200)
 
     def test_urls_uses_correct_template(self):
         """URL-адрес использует соответствующий шаблон."""

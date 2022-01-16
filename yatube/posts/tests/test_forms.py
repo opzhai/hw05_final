@@ -1,5 +1,4 @@
 import tempfile
-import shutil
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -42,10 +41,8 @@ class PostFormTests(TestCase):
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
-        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_posts_create(self):
-        Post.objects.all().delete()
         posts_count = Post.objects.count()
         form_data = {
             'text': 'Тестовый текст 2',
@@ -56,7 +53,6 @@ class PostFormTests(TestCase):
             data=form_data,
             follow=True
         )
-        new_post = response.context['page_obj'][0]
         self.assertRedirects(response, reverse('posts:profile',
                                                kwargs={'username':
                                                        'test-username',
@@ -64,67 +60,39 @@ class PostFormTests(TestCase):
                                                )
                              )
         self.assertEqual(Post.objects.count(), posts_count + 1)
-        self.assertEqual(new_post.author, self.post.author)
-        self.assertEqual(new_post.text, form_data['text'])
-        self.assertEqual(new_post.group.pk, form_data['group'])
-
-    def test_guest_cant_create(self):
-        new_post_create = self.guest_client.post(
-            reverse('posts:post_create'),
-            data={'text': 'Test text',
-                  'author': self.guest_client,
-                  'group': self.group.id, })
-        login_url = reverse('login')
-        new_post_url = reverse('posts:post_create')
-        target_url = f'{login_url}?next={new_post_url}'
-        self.assertRedirects(new_post_create, target_url)
-
-    def test_not_author_cant_edit(self):
-        user2 = User.objects.create_user(username='test-username2')
-        authorized_client2 = Client()
-        authorized_client2.force_login(user2)
-        post_id = PostFormTests.post.pk
-        post_url = reverse(
-            'posts:post_edit',
-            kwargs={'post_id': post_id})
-        form_data = {
-            'text': 'Измененный текст',
-            'group': self.group.pk,
-        }
-        response_edit = authorized_client2.post(
-            post_url,
-            data=form_data,
-            follow=True,)
-        self.assertRedirects(response_edit,
-                             reverse('posts:post_detail',
-                                     kwargs={'post_id': post_id})
-                             )
+        self.assertTrue(
+            Post.objects.filter(
+                text='Тестовый текст 2',
+                group=PostFormTests.group.pk)
+            .exists())
 
     def test_post_edit(self):
         post_id = PostFormTests.post.pk
-        post_url = reverse(
-            'posts:post_edit',
-            kwargs={'post_id': post_id})
+        test_post = Post.objects.get(id=post_id)
         form_data = {
-            'text': 'Измененный текст',
+            'text': 'Тестовый текст',
             'group': self.group.pk,
         }
-        response_edit = self.authorized_client.post(
-            post_url,
+        response_author = self.authorized_client.post(
+            reverse('posts:post_edit',
+                    kwargs={'post_id': post_id}),
             data=form_data,
             follow=True,)
-        edited_post = response_edit.context.get('post')
-        self.assertRedirects(response_edit,
+        self.assertRedirects(response_author,
                              reverse('posts:post_detail',
                                      kwargs={'post_id': post_id})
                              )
-        self.assertEqual(edited_post.author, self.post.author)
-        self.assertEqual(edited_post.text, form_data['text'])
+        self.assertEqual(test_post.text,
+                         form_data['text']
+                         )
+        self.assertEqual(test_post.group.pk,
+                         form_data['group']
+                         )
 
     def test_create_post_img(self):
         """Валидная форма создает запись с картинкой в Post."""
-        post_count = Post.objects.count()
-        small_gif = (
+        post_count = Post.objects.count()  
+        small_gif = (            
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
             b'\x01\x00\x80\x00\x00\x00\x00\x00'
             b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
@@ -169,15 +137,7 @@ class PostFormTests(TestCase):
             follow=True
         )
         self.assertRedirects(response, reverse('posts:post_detail',
-                             kwargs={'post_id': self.post.id}))
+                                     kwargs={'post_id': self.post.id}
+                                               )
+                             )
         self.assertEqual(Comment.objects.count(), comments_count + 1)
-
-    def test_author_can_comment(self):
-        self.guest_client.post(
-            reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
-            {"text": "test_comment"})
-        self.authorized_client.post(
-            reverse('posts:add_comment', kwargs={'post_id': self.post.id}),
-            {"text": "test_comment12"})
-        self.assertFalse(Comment.objects.filter(text="test_comment").exists())
-        self.assertTrue(Comment.objects.filter(text="test_comment12").exists())

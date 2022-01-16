@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 User = get_user_model()
 
@@ -24,7 +25,7 @@ class Post(models.Model):
         auto_now_add=True,
     )
     author = models.ForeignKey(
-        User,
+        User, 
         on_delete=models.CASCADE,
         related_name="posts"
     )
@@ -37,15 +38,23 @@ class Post(models.Model):
         verbose_name='Группа',
         help_text='Выберите группу'
     )
-    # Поле для картинки (необязательное)
+    rating = models.PositiveSmallIntegerField (
+        default=1,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(1)
+        ],
+        help_text="Оценка от 1 до 10"
+     )
+    # Поле для картинки (необязательное) 
     image = models.ImageField(
         'Картинка',
         upload_to='posts/',
         null=True,
         blank=True,
-    )
-    # Аргумент upload_to указывает директорию,
-    # в которую будут загружаться пользовательские файлы.
+    )  
+    # Аргумент upload_to указывает директорию, 
+    # в которую будут загружаться пользовательские файлы. 
 
     class Meta:
         ordering = ('-pub_date',)
@@ -53,7 +62,7 @@ class Post(models.Model):
         verbose_name_plural = 'Посты'
 
     def __str__(self):
-        return self.text[:15]
+        return self.text[:15] 
 
 
 class Comment(models.Model):
@@ -61,19 +70,20 @@ class Comment(models.Model):
         'Ваш комментарий',
     )
     post = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
+        Post, 
+        on_delete=models.CASCADE, 
         related_name='comments')
     author = models.ForeignKey(
-        User,
+        User, 
         on_delete=models.CASCADE,
         related_name="comments"
     )
-
+    
     created = models.DateTimeField(
         'Дата комментария',
         auto_now_add=True
     )
+
 
     class Meta:
         ordering = ('-created',)
@@ -81,7 +91,7 @@ class Comment(models.Model):
         verbose_name_plural = 'Комменты'
 
     def __str__(self):
-        return self.text[:15]
+        return self.text[:15] 
 
 
 class Follow(models.Model):

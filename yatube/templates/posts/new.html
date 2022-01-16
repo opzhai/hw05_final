@@ -31,10 +31,10 @@
             </div>
           {% endfor %}
           
-          <form method="post" enctype="multipart/form-data" action="{% if editing %}
+          <form method="post" action="{% if editing %}
                                         {% url 'post_edit' username post_id %}
                                       {% else %}
-                                        {% url 'post_create' %}
+                                        {% url 'new' %}
                                       {% endif %}">
             {% csrf_token %}
             {% for field in form %}
