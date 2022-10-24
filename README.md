@@ -6,7 +6,6 @@
   * Django 2.2
   * Python 3.7
   * Django Unittest
-  * Django debug toolbar
   * PostgreSQL
   * Django ORM
 
